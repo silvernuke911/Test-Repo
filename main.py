@@ -1,5 +1,5 @@
 import os
-from image_split import *
+from functions import *
 
 mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images\\')
 filename = 'anti-aliasing god un.png'
