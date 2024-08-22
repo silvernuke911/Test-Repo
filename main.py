@@ -14,7 +14,7 @@ scale = 1.1
 start_lat = 4
 end_lat = 8
 lat_divisions = 20
-num_slices = (end_lat-start_lat)*lat_divisions
+num_slices = (end_lat - start_lat) * lat_divisions
 
 # Output path and scaling factor
 base_name, ext = os.path.splitext(filename)
@@ -53,10 +53,10 @@ def cut_image_horizontally(image_path, num_slices, output_path, output_folder):
         slice_img = image[start_row:end_row, :]
 
         # Save the slice
-        output_path_ext = os.path.join(output_path, output_folder, f'{start_lat+(i/lat_divisions):.2f}.png')
+        output_path_ext = os.path.join(output_path, output_folder, f'{start_lat + (i/lat_divisions):.2f}.png')
         print(output_path_ext)
         cv2.imwrite(output_path_ext, slice_img)
-        print(f'slice_{i + 1}.png created')
+        print(f'slice {i + 1}.png created')
     print(f"{num_slices} slices saved to '{output_folder}'.")
 
 def scale_image_height(image_path, scale, output_path):
