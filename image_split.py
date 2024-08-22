@@ -2,15 +2,15 @@ import numpy as np
 import cv2
 import os
 
-mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images\\')
-filename = 'anti-aliasing god un.png'
-image_path = mainpath+filename
-img = cv2.imread(image_path)
-print(np.size(img))
-resized_img = cv2.resize(img, (500, 500))
-cv2.imshow('Anti-Aliased Image', resized_img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images\\')
+# filename = 'anti-aliasing god un.png'
+# image_path = mainpath+filename
+# img = cv2.imread(image_path)
+# print(np.size(img))
+# resized_img = cv2.resize(img, (500, 500))
+# cv2.imshow('Anti-Aliased Image', resized_img)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
 
 def cut_image_horizontally(image_path, num_slices, output_folder):
     # Load the image
@@ -44,9 +44,8 @@ def cut_image_horizontally(image_path, num_slices, output_folder):
 
     print(f"{num_slices} slices saved to '{output_folder}'.")
 
-# Example usage:
-image_path = mainpath+filename
-num_slices = 10
-output_folder = mainpath+'output_slices'
+# image_path = mainpath+filename
+# num_slices = 10
+# output_folder = mainpath+'output_slices'
 
-cut_image_horizontally(image_path, num_slices, output_folder)
+# cut_image_horizontally(image_path, num_slices, output_folder)
