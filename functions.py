@@ -29,7 +29,7 @@ def cut_image_horizontally(image_path, num_slices, output_path, output_folder):
         slice_img = image[start_row:end_row, :]
 
         # Save the slice
-        output_path_ext = os.path.join(output_path, output_folder, f'slice_{i + 1}.png')
+        output_path_ext = os.path.join(output_path, output_folder, f'latslice_{startlat+(i/latdiv)}.png')
         print(output_path_ext)
         cv2.imwrite(output_path_ext, slice_img)
         print(f'slice_{i + 1}.png created')
