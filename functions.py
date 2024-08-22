@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import os
 
-def cut_image_horizontally(image_path, num_slices, output_folder):
+def cut_image_horizontally(image_path, num_slices, output_path, output_folder):
     # Load the image
     image = cv2.imread(image_path)
     if image is None:
@@ -15,8 +15,8 @@ def cut_image_horizontally(image_path, num_slices, output_folder):
     slice_height = height // num_slices
 
     # Create the output directory if it doesn't exist
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    if not os.path.exists(output_path+output_folder):
+        os.makedirs(output_path+output_folder)
 
     # Slice the image and save each part
     for i in range(num_slices):
@@ -29,9 +29,10 @@ def cut_image_horizontally(image_path, num_slices, output_folder):
         slice_img = image[start_row:end_row, :]
 
         # Save the slice
-        output_path = os.path.join(output_folder, f'slice_{i + 1}.png')
-        cv2.imwrite(output_path, slice_img)
-
+        output_path_ext = os.path.join(output_path, output_folder, f'slice_{i + 1}.png')
+        print(output_path_ext)
+        cv2.imwrite(output_path_ext, slice_img)
+        print(f'slice_{i + 1}.png created')
     print(f"{num_slices} slices saved to '{output_folder}'.")
 
 def scale_image_height(image_path, scale, output_path):
@@ -79,21 +80,21 @@ def scale_image(image_path, scale, output_path):
     cv2.destroyAllWindows()
     
 
-# Main path and filenames
-mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images')
-filename = 'telescope1.png'
-image_path = os.path.join(mainpath, filename)
+# # Main path and filenames
+# mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images')
+# filename = 'telescope1.png'
+# image_path = os.path.join(mainpath, filename)
 
-# Output path and scaling factor
-base_name, ext = os.path.splitext(filename)
-output_name = f'{base_name}_scaled{ext}'
-output_path = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images', output_name)
-scale = 1.1
+# # Output path and scaling factor
+# base_name, ext = os.path.splitext(filename)
+# output_name = f'{base_name}_scaled{ext}'
+# output_path = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images', output_name)
+# scale = 1.1
 
-# Call the function with the correct output path
-scale_image_height(image_path, scale, output_path)
+# # Call the function with the correct output path
+# scale_image_height(image_path, scale, output_path)
 
-image = cv2.imread(image_path)
-print(image)
-print(np.size(image))
-print(image.shape)
+# image = cv2.imread(image_path)
+# print(image)
+# print(np.size(image))
+# print(image.shape)
