@@ -95,3 +95,5 @@ scale_image_height(image_path, scale, output_path)
 
 image = cv2.imread(image_path)
 print(image)
+print(np.size(image))
+print(image.shape)
