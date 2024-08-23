@@ -1,16 +1,11 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-dlat = 1
+dlat = 0.2
 start_lat = -85
 end_lat = 85
-lat = np.arange(start_lat, end_lat+dlat, dlat)
+lat = np.arange(start_lat, end_lat + dlat, dlat)
 print(lat)
-
-# def mercator_conversion(latlist):
-#     rad_list = rad_list = np.deg2rad(latlist)
-#     conv_list = np.log(np.tan(rad_list)+ (1 / np.cos(rad_list)))-np.log(np.tan(rad_list - dlat_list)+ (1 / np.cos(rad_list - dlat_list)))
-#     return conv_list
 
 def numerical_differentiator(x, func):
     """
@@ -47,9 +42,6 @@ def mercator_conversion(latlist):
     # Convert the latitude list to a NumPy array
     lat_list = np.array(latlist)
     conv_list = np.rad2deg(numerical_differentiator(lat_list,mercator_function))
-    # print(conv_list)
-    # rad_lat = np.deg2rad(lat_list)
-    # conv_list = np.log(np.tan(rad_lat) + (1 / np.cos(rad_lat))) #- np.log(np.tan(rad_lat-dlat) + (1 / np.cos(rad_lat-dlat)))
     return conv_list
 
 conversion_list = mercator_conversion(lat)
