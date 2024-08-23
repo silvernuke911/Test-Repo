@@ -131,3 +131,12 @@ if __name__=='__main__':
 
 
 
+# > Get image 
+# > Split image 
+# > Put the split images into a new file 
+# > Name the images according to their latitude
+# > Stretch the image by the function of its file name 
+# > combine the images 
+# > delete the folder
+
+# > add more functionality for negative latitudes

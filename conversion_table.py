@@ -1,7 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-dlat = 0.2
+dlat = 1
 start_lat = -85
 end_lat = 85
 lat = np.arange(start_lat, end_lat + dlat, dlat)
