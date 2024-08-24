@@ -1,8 +1,5 @@
 import os
-import cv2
 import numpy as np
-import shutil
-
 from functions import *
 
 # Input
