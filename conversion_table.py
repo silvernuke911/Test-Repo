@@ -1,7 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-dlat = 2
+dlat = 1
 start_lat = -85
 end_lat = 85
 lat = np.arange(start_lat, end_lat + dlat, dlat)
@@ -44,7 +44,11 @@ def mercator_conversion(latlist):
     conv_list = np.rad2deg(numerical_differentiator(lat_list,mercator_function))
     return conv_list
 
-conversion_list = mercator_conversion(lat)
+def mercator_conversion1(latlist):
+    lat_list = np.array(latlist)
+    return np.rad2deg(np.gradient(mercator_function(lat_list)))
+
+conversion_list = mercator_conversion1(lat)
 list_table = list(zip(lat,conversion_list))
 for entry in list_table:
     print(entry)

@@ -3,6 +3,21 @@ import cv2
 import numpy as np
 import shutil
 
+def distribute_sum_centrally_even(m, n):
+    quotient, remainder = divmod(m, n)
+    result = [quotient] * n
+    
+    # Calculate the intervals for distributing the remainder
+    interval = n / (remainder + 1)
+    
+    # Distribute the remainder values
+    for i in range(remainder):
+        # Calculate the position to add the extra value
+        pos = int(round(interval * (i + 1))) - 1
+        result[pos] += 1
+    
+    return result
+
 def cut_image_horizontally(image_path, num_slices, output_path):
     image = cv2.imread(image_path)
     
@@ -11,30 +26,32 @@ def cut_image_horizontally(image_path, num_slices, output_path):
 
     height, width, _ = image.shape
 
-    # Calculate the base height of each slice
-    base_slice_height = height // num_slices
-    # Calculate the remainder that needs to be distributed
-    remainder = height % num_slices
+    # Calculate the heights of each slice based on the central distribution
+    heights = distribute_sum_centrally_even(height, num_slices)
 
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
     start_row = 0
-    for i in range(num_slices):
-        # Calculate end_row by adding the base height and 1 extra pixel if needed
-        end_row = start_row + base_slice_height + (1 if i < remainder else 0)
+    height_small_list = []
 
+    for i, slice_height in enumerate(heights):
+        end_row = start_row + slice_height
+        height_small = end_row - start_row
+        height_small_list.append(height_small)
+        
         # Slice the image
         slice_img = image[start_row:end_row, :]
 
         # Save the slice
         output_path_ext = os.path.join(output_path, f'slice_{i:06}.png')
-        print(output_path_ext)
+        print(output_path_ext, height_small)
         cv2.imwrite(output_path_ext, slice_img)
 
         # Update start_row for the next slice
         start_row = end_row
 
+    print(height, sum(height_small_list))
     print(f"{num_slices} slices saved to '{output_path}'.")
 
 def scale_image_height(image_path, scale, output_path):
@@ -139,17 +156,19 @@ def combine_images_vertically(image_paths, output_file):
 # Input
 
 mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images\\')
-filename = 'map_test.png'
+filename = 'ksc_heightmap_1.png'
 
 
-start_lat = -40
-end_lat = 20
+start_lat = 0
+end_lat = 80
 lat_divisions = 1
 num_slices = (end_lat - start_lat) * lat_divisions
 dlat = 1 / lat_divisions
-lat_list = np.arange(start_lat, end_lat + dlat, dlat)
+lat_list = np.arange(start_lat, end_lat, dlat)
+lat_list = [(x + dlat if x >= 0 else x) for x in lat_list]
+print(lat_list, len(lat_list))
 lat_list = lat_list[::-1]
-
+print(lat_list)
 # Output
 
 output_folder = f'{filename}_sliced'
@@ -163,9 +182,9 @@ for file,lat in zip(filenames,lat_list):
 
 conv_list = mercator_conversion(lat_list)
 output_file = os.path.join(mainpath, f'{filename}_combined.png')
-for path, conv in zip(filenames,conv_list):
+for path, lat, conv in zip(filenames,lat_list,conv_list):
     scale_image_height(path, conv, path)
-    print(f'{path} stretched by {conv}')
+    print(f'{path}, {lat} stretched by {conv:.3f}')
 print('stretching done')
 combine_images_vertically(filenames, output_file)
 print('Combined done')
