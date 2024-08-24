@@ -3,12 +3,14 @@ import cv2
 import numpy as np
 import shutil
 
-def format_float(num):
-    if num < 10:
-        return f'{num:06.3f}'  # Format as 00.000 for single-digit
-    return f'{num:0.3f}'  # Format as 12.345 for multi-digit
 
-def cut_image_horizontally(mainpath, filename, num_slices, output_path, output_folder):
+
+def cut_image_horizontally(mainpath, filename, start_lat, end_lat, dlat, output_path, output_folder):
+    def format_float(num):
+        if num < 10:
+            return f'{num:06.3f}'  # Format as 00.000 for single-digit
+        return f'{num:0.3f}'  # Format as 12.345 for multi-digit
+
     image_path = mainpath + filename
     # Load the image
     image = cv2.imread(image_path)
@@ -116,7 +118,7 @@ def get_all_file_paths(directory):
                 file_paths.append(full_path)
     return file_paths
 
-def combine_images_vertically(image_paths, output_file):
+def combine_images_vertically(image_paths, output_file, state):
     if not image_paths:
         raise ValueError("No image files found in the provided paths.")
     
@@ -135,7 +137,10 @@ def combine_images_vertically(image_paths, output_file):
         raise ValueError("Not all images have the same width.")
     
     # Combine images vertically (starting from the lowest)
-    combined_image = np.vstack(images[::-1])
+    if state == 1:
+        combined_image = np.vstack(images[::-1])
+    elif state == -1:
+        combined_image = np.vstack(images[::-1])
     
     # Ensure the directory for the output file exists
     output_dir = os.path.dirname(output_file)
@@ -191,28 +196,48 @@ def delete_folder(folder_path):
     else:
         print(f"Folder '{folder_path}' does not exist.")
 
+def flip_image_vertically(image_path, output_path):
+    """
+    Flip an image vertically and save the result.
+
+    Parameters:
+    - image_path (str): Path to the input image.
+    - output_path (str): Path to save the flipped image.
+    """
+    # Load the image
+    image = cv2.imread(image_path)
+    if image is None:
+        raise ValueError(f"Image at {image_path} could not be loaded.")
+    
+    # Flip the image vertically
+    flipped_image = cv2.flip(image, 0)
+    
+    # Save the flipped image
+    cv2.imwrite(output_path, flipped_image)
+
 mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images\\')
 filename = 'ksc_ellis.png'
 
 
 # Start params
-start_lat = 0
-end_lat = 80
-lat_divisions = 2
+start_lat = -60
+end_lat = 0
+lat_divisions = 1
 num_slices = (end_lat - start_lat) * lat_divisions
 dlat = 1 / lat_divisions
 lat_list = np.arange(start_lat, end_lat + dlat, dlat)
 
 # Input path
 mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images\\')
-filename = 'ksc_heightmap_1.png'
+filename = 'map_test.png'
 
 # Output path
 output_path = mainpath
 output_folder = f'{filename}_sliced'
 
-def main():
-    cut_image_horizontally(mainpath, filename, num_slices, output_path, output_folder)
+def main_positive():
+    state = 1
+    cut_image_horizontally(mainpath, filename, start_lat, end_lat, dlat, output_path, output_folder)
     temp_directory = mainpath + output_folder
     file_paths = get_all_file_paths(temp_directory)
     # Print the list of file paths
@@ -229,9 +254,62 @@ def main():
         print(path, name, conv)
         scale_image_height(path, conv, path)
         print(f'slice_{name} stretched')
-    combine_images_vertically(file_paths, output_file)
+    combine_images_vertically(file_paths, output_file, state)
     print ('Image successfully converted')
     delete_folder(temp_directory)
+
+def main_negative(start_lat_i, end_lat_i,filename):
+    state = -1
+
+    start_lat = - end_lat_i
+    end_lat = - start_lat_i
+
+    print(start_lat,end_lat)
+    lat_list = np.arange(start_lat, end_lat + dlat, dlat)
+
+    flip_image_vertically(mainpath+filename,mainpath+f'{filename}_flipped.png')
+    filename = f'{filename}_flipped.png'
+    print(filename)
+    output_folder = f'{filename}_sliced'
+
+    num_slices = (end_lat - start_lat) * lat_divisions
+    print(num_slices)
+    print(dlat)
+
+    cut_image_horizontally(mainpath, filename, start_lat, end_lat, dlat, output_path, output_folder)
+    temp_directory = mainpath + output_folder
+    file_paths = get_all_file_paths(temp_directory)
+    # Print the list of file paths
+    for path in file_paths:
+        print(path)
+    filenames = get_filenames_from_paths(file_paths)
+    filenames = [float(item) for item in filenames]
+
+    conv_list = mercator_conversion(lat_list)
+    print(conv_list)
+
+    output_file = os.path.join(mainpath, f'{filename}_combined.png')
+    for path, name, conv in zip(file_paths, filenames,conv_list):
+        print(path, name, conv)
+        scale_image_height(path, conv, path)
+        print(f'slice_{name} stretched')
+    combine_images_vertically(file_paths, output_file,state)
+    print ('Image successfully converted')
+    delete_folder(temp_directory)
+    flip_image_vertically(mainpath+filename,mainpath+f'{filename}_combined.png')
+    pass 
+
+def main_posneg():
+    pass
+
+def main():
+    if start_lat >= 0 and end_lat > 0:
+        main_positive()
+    if start_lat < 0 and end_lat <= 0:
+        main_negative(start_lat,end_lat,filename)
+    if start_lat < 0 and end_lat > 0:
+        main_posneg()
+
 if __name__=='__main__':
     main()
 

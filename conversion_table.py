@@ -1,7 +1,7 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-dlat = 1
+dlat = 2
 start_lat = -85
 end_lat = 85
 lat = np.arange(start_lat, end_lat + dlat, dlat)
@@ -54,5 +54,7 @@ plt.ylim([-3,3])
 plt.show()
 
 plt.plot(lat, conversion_list)
-plt.ylim([0,5])
-plt.show()
+plt.ylim([0,8])
+plt.grid() 
+plt.xticks(range(-90,100,10))
+plt.show() 
