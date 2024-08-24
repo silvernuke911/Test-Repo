@@ -45,8 +45,9 @@ def mercator_conversion(latlist):
     return conv_list
 
 conversion_list = mercator_conversion(lat)
-print(lat)
-print(conversion_list)
+list_table = list(zip(lat,conversion_list))
+for entry in list_table:
+    print(entry)
 
 plt.plot(lat, mercator_function(lat))
 plt.ylim([-3,3])
