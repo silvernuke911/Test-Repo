@@ -3,8 +3,8 @@ import numpy as np
 from functions import *
 
 # Input
-mainpath = os.path.join(r'C:\Users\verci\Documents\Python Code\Test-Repo', 'test images\\')
-filename = 'ksc_heightmap_1.png'
+mainpath = 'test images\\'
+filename = 'Kerbin_heightmap_all.png'
 
 start_lat = 0
 end_lat   = 80
@@ -13,12 +13,13 @@ lat_divisions = 1
 # Output
 output_folder = f'{filename}_sliced'
 output_path = mainpath + output_folder
-output_file = os.path.join(mainpath, f'{filename}_converted.png')
+output_file = os.path.join(mainpath, f'{filename}_converted_2.png')
 
 def main():
     num_slices = (end_lat - start_lat) * lat_divisions
     dlat = 1 / lat_divisions
     lat_list = np.arange(start_lat, end_lat, dlat)
+    
     lat_list = [(x + dlat if x >= 0 else x) for x in lat_list]
     lat_list = lat_list[::-1]
 
