@@ -6,14 +6,14 @@ from functions import *
 mainpath = 'test images\\'
 filename = 'Kerbin_heightmap_all.png'
 
-start_lat = 0
+start_lat = -80
 end_lat   = 80
-lat_divisions = 1
+lat_divisions = 2
 
 # Output
 output_folder = f'{filename}_sliced'
 output_path = mainpath + output_folder
-output_file = os.path.join(mainpath, f'{filename}_converted_2.png')
+output_file = os.path.join(mainpath, f'{filename}_converted_3.png')
 
 def main():
     num_slices = (end_lat - start_lat) * lat_divisions
